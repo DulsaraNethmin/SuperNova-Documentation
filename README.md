@@ -1,1 +1,0 @@
-# SuperNova-Documentation blannako  ammo ammo nethmin
