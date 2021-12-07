@@ -130,3 +130,67 @@ create table userTeleNo
     tele varchar(10),
     constraint fk_tele foreign key (user_id) references user(user_id)
 );
+
+
+
+
+#use database
+use documentmanager;
+
+#view for see profile details by one user
+DELIMITER $$
+create view as myProfile 
+	select u.user_id as userID,u.name as name,u.email as email, b.b_name as branchName, d.d_name as dpt_name
+    from user u,department d,branch b
+    where u.dpt_id=d.d_id and d.branch_id=b.b_id
+DELIMITER ;    
+select * from myprofile;
+select * from myJobs;
+
+
+#employee can view their list of jobs
+USE `documentmanager`;
+CREATE  OR REPLACE VIEW `myJobs` AS
+	select j.job_id as jobId, j.date as date, d.doc_id as docId, d.doc_name as docName
+    from job j,user u,document d
+    where u.user_id = j.emp_id and j.doc_id=d.doc_id;
+
+#admin can view selected employee or customer details
+DELIMITER $$
+USE `documentmanager`$$
+CREATE PROCEDURE `seeEmployee` (emp_id varchar(5))
+BEGIN
+		select u.user_id as employee_id, u.name as name, u.email as email, u.password as password
+        from user u
+        where u.user_id = emp_id;
+END$$
+DELIMITER ;
+
+
+#admin can register customer and employees
+DELIMITER $$
+USE `documentmanager`$$
+CREATE FUNCTION `registerEmployee` (uId varchar(5),uName varchar(40),uEmail varchar(30),uPassword varchar(10),uDpt_id varchar(5),uUFlag int)
+RETURNS INTEGER
+BEGIN
+	insert into user(user_id,name,email,password,dpt_id,uFlag) values(uId,uName,uEmail,uPassword,uDpt_id,uUFlag);
+RETURN 1;
+END$$
+
+DELIMITER ;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
